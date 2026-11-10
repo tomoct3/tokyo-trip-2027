@@ -3,134 +3,315 @@
   "home": "stay",
   "spots": [
     {
-      "id": "stay", "name": "宿", "type": "stay", "status": "fixed", "days": [12, 13, 14],
-      "lat": 35.7158, "lng": 139.7786,
+      "id": "stay",
+      "name": "宿",
+      "type": "stay",
+      "status": "fixed",
+      "days": [
+        12,
+        13,
+        14
+      ],
+      "lat": 35.7158,
+      "lng": 139.7786,
       "memo": "上野駅の北側（入谷口のあたり）。ピンの位置はおおよそです。12日と13日の2泊。"
     },
     {
-      "id": "haneda", "name": "羽田空港 第2ターミナル", "type": "transport", "status": "fixed", "days": [12, 14],
-      "lat": 35.5505, "lng": 139.7887,
+      "id": "haneda",
+      "name": "羽田空港 第2ターミナル",
+      "type": "transport",
+      "status": "fixed",
+      "days": [
+        12,
+        14
+      ],
+      "lat": 35.5505,
+      "lng": 139.7887,
       "memo": "12日 10:45着／14日 18:10発。六本木からは約45〜50分。",
       "url": "https://tokyo-haneda.com/"
     },
     {
-      "id": "arena", "name": "GMOアリーナさいたま", "type": "venue", "status": "fixed", "days": [13],
-      "lat": 35.8949, "lng": 139.6308,
+      "id": "arena",
+      "name": "GMOアリーナさいたま",
+      "type": "venue",
+      "status": "fixed",
+      "days": [
+        13
+      ],
+      "lat": 35.8949,
+      "lng": 139.6308,
       "memo": "Radiohead 開場15:30／開演18:00。さいたま新都心駅から徒歩約5分。行きは14:20ごろ宿を出る目安。",
       "url": "https://www.saitama-arena.co.jp/"
     },
     {
-      "id": "shintoshin", "name": "さいたま新都心駅", "type": "station", "status": "fixed", "days": [13],
-      "lat": 35.8935, "lng": 139.6338,
+      "id": "shintoshin",
+      "name": "さいたま新都心駅",
+      "type": "station",
+      "status": "fixed",
+      "days": [
+        13
+      ],
+      "lat": 35.8935,
+      "lng": 139.6338,
       "memo": "上野から高崎線・宇都宮線で約20〜25分。京浜東北線の「南浦和行」はここまで行かないので注意。終演後は入場規制がかかることがあります。"
     },
     {
-      "id": "omiya", "name": "大宮駅", "type": "station", "status": "candidate", "days": [13],
-      "lat": 35.9062, "lng": 139.6238,
+      "id": "omiya",
+      "name": "大宮駅",
+      "type": "station",
+      "status": "candidate",
+      "days": [
+        13
+      ],
+      "lat": 35.9062,
+      "lng": 139.6238,
       "memo": "帰りの予備案。新都心駅が混みすぎていたら会場から徒歩約20分。始発電車があり座れるかも。"
     },
     {
-      "id": "cocoon", "name": "コクーンシティ", "type": "food", "status": "candidate", "days": [13],
-      "lat": 35.8947, "lng": 139.6371,
+      "id": "cocoon",
+      "name": "コクーンシティ",
+      "type": "food",
+      "status": "fixed",
+      "days": [
+        13
+      ],
+      "lat": 35.8947,
+      "lng": 139.6371,
       "memo": "新都心駅東口の商業施設。日高屋は日曜23:30まで（2026年時点）。他の店は閉店が早めの見込み。",
       "url": "https://www.cocoon-city.jp/"
     },
     {
-      "id": "keyaki", "name": "けやきひろば", "type": "food", "status": "candidate", "days": [13],
-      "lat": 35.8928, "lng": 139.6322,
+      "id": "keyaki",
+      "name": "けやきひろば",
+      "type": "food",
+      "status": "candidate",
+      "days": [
+        13
+      ],
+      "lat": 35.8928,
+      "lng": 139.6322,
       "memo": "会場のすぐ隣。ライブの日はどこも混む。終演直後は満席を覚悟。"
     },
     {
-      "id": "ameyoko", "name": "アメ横〜御徒町", "type": "food", "status": "candidate", "days": [12, 13, 14],
-      "lat": 35.7100, "lng": 139.7745,
+      "id": "ameyoko",
+      "name": "アメ横〜御徒町",
+      "type": "food",
+      "status": "candidate",
+      "days": [
+        12,
+        13,
+        14
+      ],
+      "lat": 35.71,
+      "lng": 139.7745,
       "memo": "ライブ後の夕食の本命エリア。深夜まで開く居酒屋・中華・ラーメンが多い。上野着は22時〜22時45分ごろの見込み。"
     },
     {
-      "id": "scai", "name": "SCAI THE BATHHOUSE", "type": "art", "status": "candidate", "days": [12],
-      "lat": 35.7230, "lng": 139.7703,
+      "id": "scai",
+      "name": "SCAI THE BATHHOUSE",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12
+      ],
+      "lat": 35.723,
+      "lng": 139.7703,
       "memo": "銭湯を改装した現代美術ギャラリー。土曜12〜18時・無料。日暮里駅から徒歩7分、谷中経由で上野公園へ歩ける。",
       "url": "https://www.scaithebathhouse.com/"
     },
     {
-      "id": "nmwa", "name": "国立西洋美術館", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.7154, "lng": 139.7758,
+      "id": "nmwa",
+      "name": "国立西洋美術館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.7154,
+      "lng": 139.7758,
       "memo": "コルビュジエ設計（世界遺産）。マティス 黒と白の詩学（3/20〜7/19）。土曜は20:00まで。月曜休館。",
       "url": "https://www.nmwa.go.jp/"
     },
     {
-      "id": "horyuji", "name": "法隆寺宝物館（東京国立博物館）", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.7196, "lng": 139.7745,
+      "id": "horyuji",
+      "name": "法隆寺宝物館（東京国立博物館）",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.7196,
+      "lng": 139.7745,
       "memo": "谷口吉生設計。土曜は20:00まで。本館の「国宝 三井寺のすべて」は6/13が最終日。月曜休館。",
       "url": "https://www.tnm.jp/"
     },
     {
-      "id": "tobikan", "name": "東京都美術館", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.7173, "lng": 139.7727,
+      "id": "tobikan",
+      "name": "東京都美術館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.7173,
+      "lng": 139.7727,
       "memo": "前川國男の建築。デュフィ展（4/24〜8/22）。月曜は休室の見込み。",
       "url": "https://www.tobikan.jp/"
     },
     {
-      "id": "bunka", "name": "東京文化会館", "type": "art", "status": "candidate", "days": [12, 13, 14],
-      "lat": 35.7139, "lng": 139.7758,
+      "id": "bunka",
+      "name": "東京文化会館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13,
+        14
+      ],
+      "lat": 35.7139,
+      "lng": 139.7758,
       "memo": "前川國男の建築。上野公園の建築散歩に（外観のみ）。"
     },
     {
-      "id": "kodomo", "name": "国際子ども図書館", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.7218, "lng": 139.7750,
+      "id": "kodomo",
+      "name": "国際子ども図書館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.7218,
+      "lng": 139.775,
       "memo": "安藤忠雄が改修。上野公園の建築散歩に。",
       "url": "https://www.kodomo.go.jp/"
     },
     {
-      "id": "kusama", "name": "草間彌生美術館", "type": "art", "status": "candidate", "days": [13],
-      "lat": 35.7031, "lng": 139.7244,
+      "id": "kusama",
+      "name": "草間彌生美術館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        13
+      ],
+      "lat": 35.7031,
+      "lng": 139.7244,
       "memo": "日時指定の完全予約制（90分枠）。6月分は2027年4月1日10時発売。13日なら11:00枠→12:30に出て会場へ。月〜水休。",
       "url": "https://yayoikusamamuseum.jp/"
     },
     {
-      "id": "momas", "name": "埼玉県立近代美術館", "type": "art", "status": "candidate", "days": [13],
-      "lat": 35.8720, "lng": 139.6448,
+      "id": "momas",
+      "name": "埼玉県立近代美術館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        13
+      ],
+      "lat": 35.872,
+      "lng": 139.6448,
       "memo": "黒川紀章の最初の美術館。北浦和駅から徒歩3分、会場の2駅手前。13日午前に寄る案。10:00開館。",
       "url": "https://pref.spec.ed.jp/momas/"
     },
     {
-      "id": "mori", "name": "森美術館", "type": "art", "status": "candidate", "days": [12, 13, 14],
-      "lat": 35.6605, "lng": 139.7292,
+      "id": "mori",
+      "name": "森美術館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13,
+        14
+      ],
+      "lat": 35.6605,
+      "lng": 139.7292,
       "memo": "「世界はあそびでできている」（4/29〜9/23）。月曜も開館、〜22時。9/24から休館前の最後の企画展。",
       "url": "https://www.mori.art.museum/"
     },
     {
-      "id": "nact", "name": "国立新美術館", "type": "art", "status": "candidate", "days": [12, 13, 14],
-      "lat": 35.6653, "lng": 139.7264,
+      "id": "nact",
+      "name": "国立新美術館",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13,
+        14
+      ],
+      "lat": 35.6653,
+      "lng": 139.7264,
       "memo": "黒川紀章設計。ディーヴァ展（3/24〜7/19）と開館20周年記念展。月曜も開館、火曜休。〜18:00。",
       "url": "https://www.nact.jp/"
     },
     {
-      "id": "2121", "name": "21_21 DESIGN SIGHT", "type": "art", "status": "candidate", "days": [14],
-      "lat": 35.6664, "lng": 139.7313,
+      "id": "2121",
+      "name": "21_21 DESIGN SIGHT",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        14
+      ],
+      "lat": 35.6664,
+      "lng": 139.7313,
       "memo": "安藤忠雄設計。6月の展示は未発表。火曜休なので14日は開館。",
       "url": "https://www.2121designsight.jp/"
     },
     {
-      "id": "mot", "name": "東京都現代美術館（MOT）", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.6795, "lng": 139.8081,
+      "id": "mot",
+      "name": "東京都現代美術館（MOT）",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.6795,
+      "lng": 139.8081,
       "memo": "ソ・ドホ展は6/19からで旅程の後。6/12〜13にコレクション展が開いているかは未発表。月曜休館。",
       "url": "https://www.mot-art-museum.jp/"
     },
     {
-      "id": "yokohama", "name": "横浜美術館（横浜トリエンナーレ）", "type": "art", "status": "candidate", "days": [12, 13, 14],
-      "lat": 35.4573, "lng": 139.6311,
+      "id": "yokohama",
+      "name": "横浜美術館（横浜トリエンナーレ）",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13,
+        14
+      ],
+      "lat": 35.4573,
+      "lng": 139.6311,
       "memo": "第9回横浜トリエンナーレ（4/23〜9/12、木曜休場）。14日に寄って京急で羽田へ（約30分）という案も。",
       "url": "https://www.yokohamatriennale.jp/"
     },
     {
-      "id": "stationgallery", "name": "東京ステーションギャラリー", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.6812, "lng": 139.7664,
+      "id": "stationgallery",
+      "name": "東京ステーションギャラリー",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.6812,
+      "lng": 139.7664,
       "memo": "秦テルヲ 聖と俗（仮称、4/29〜6/20）。東京駅丸の内北口の駅構内。月曜休館。",
       "url": "https://www.ejrcf.or.jp/gallery/"
     },
     {
-      "id": "sendoya", "name": "泉屋博古館東京", "type": "art", "status": "candidate", "days": [12, 13],
-      "lat": 35.6655, "lng": 139.7405,
+      "id": "sendoya",
+      "name": "泉屋博古館東京",
+      "type": "art",
+      "status": "candidate",
+      "days": [
+        12,
+        13
+      ],
+      "lat": 35.6655,
+      "lng": 139.7405,
       "memo": "生誕150年 木島櫻谷（6/5〜8/1）。六本木一丁目。月曜休館。",
       "url": "https://sen-oku.or.jp/tokyo/"
     }
