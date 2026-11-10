@@ -153,6 +153,16 @@
     if (!lg.hidden && state.pair) { state.pair = null; updatePair(); }
   });
 
+  // ---------- 更新ボタン ----------
+  // ホーム画面のアプリは古いファイルを覚えていることがあるので、取り直してから開き直す
+  document.getElementById('refresh').addEventListener('click', () => {
+    const btn = document.getElementById('refresh');
+    btn.textContent = '更新中…'; btn.disabled = true;
+    const files = ['./', 'index.html', 'app.js', 'style.css', 'spots.json', 'manifest.webmanifest'];
+    Promise.all(files.map(f => fetch(f, { cache: 'reload' }).catch(() => null)))
+      .then(() => { location.reload(); });
+  });
+
   // ---------- 現在地 ----------
   let meMarker = null;
   document.getElementById('locate').addEventListener('click', () => {
