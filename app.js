@@ -225,7 +225,7 @@
   document.getElementById('refresh').addEventListener('click', () => {
     const btn = document.getElementById('refresh');
     btn.textContent = '更新中…'; btn.disabled = true;
-    const files = ['./', 'index.html', 'app.js', 'style.css', 'spots.json', 'manifest.webmanifest'];
+    const files = ['./', 'index.html', 'app.js', 'style.css', 'spots.json', 'manifest.webmanifest', 'edit.html'];
     Promise.all(files.map(f => fetch(f, { cache: 'reload' }).catch(() => null)))
       .then(() => { location.reload(); });
   });

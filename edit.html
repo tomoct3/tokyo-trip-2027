@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>確定と日程の編集</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ffffff">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow-y: auto; }
+  .page { max-width: 560px; margin: 0 auto; padding: calc(env(safe-area-inset-top) + 10px) 16px calc(env(safe-area-inset-bottom) + 100px); }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .top h1 { font-size: 18px; margin: 0; }
+  .back { color: var(--accent); text-decoration: none; font-size: 15px; white-space: nowrap; }
+  .card { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 10px 0; }
+  .card h2 { font-size: 15px; margin: 0 0 6px; }
+  .hint { color: var(--muted); font-size: 13px; margin: 4px 0; line-height: 1.5; }
+  .tokenRow { display: flex; gap: 6px; margin-top: 6px; }
+  .tokenRow input { flex: 1; min-width: 0; font-size: 16px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); }
+  .b { border: 0; border-radius: 10px; padding: 9px 12px; font-size: 15px; font-weight: 600; background: var(--chip); color: var(--fg); }
+  .b.primary { background: var(--accent); color: #fff; }
+  .b:disabled { opacity: .5; }
+  .spot { display: grid; grid-template-columns: 28px 1fr; gap: 4px 8px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .spot .dot { width: 26px; height: 26px; font-size: 13px; }
+  .spot .name { font-weight: 600; font-size: 15px; }
+  .spot.changed .name::after { content: '　変更あり'; color: var(--accent); font-size: 12px; font-weight: 600; }
+  .ctrl { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 15px; }
+  .ctrl label { display: inline-flex; align-items: center; gap: 3px; padding: 4px 0; white-space: nowrap; }
+  .ctrl input { width: 19px; height: 19px; margin: 0; }
+  .sep { width: 1px; height: 20px; background: var(--line); }
+  @media (max-width: 380px) { .page { padding-left: 12px; padding-right: 12px; } .ctrl { font-size: 14px; gap: 6px 8px; } .sep { display: none; } }
+  .grpTitle { font-size: 13px; font-weight: 700; color: var(--muted); margin: 18px 0 0; }
+  .bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--bg); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(env(safe-area-inset-bottom) + 10px); display: flex; gap: 10px; align-items: center; }
+  .bottom .msg { flex: 1; font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .ok { color: #2e8b57 !important; }
+  .ng { color: #d1342f !important; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <h1>確定と日程の編集</h1>
+    <a class="back" href="./">‹ 地図へ戻る</a>
+  </div>
+
+  <div class="card" id="tokenCard">
+    <h2>GitHubの鍵</h2>
+    <p class="hint" id="tokenState"></p>
+    <div class="tokenRow" id="tokenInputRow">
+      <input id="tokenInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_ で始まる鍵を貼り付け">
+      <button class="b" id="tokenSave">保存</button>
+    </div>
+    <p class="hint">鍵はこのiPhoneの中だけに保存され、GitHub以外には送りません。</p>
+    <button class="b" id="tokenForget" hidden>このiPhoneから鍵を消す</button>
+  </div>
+
+  <p class="hint">「確定」にしたスポットは、チェックを入れた日の予定として地図に出ます。「候補」のチェックは「この日に行けそう」という目安です。</p>
+  <div id="list"><p class="hint">読み込み中…</p></div>
+</div>
+
+<div class="bottom">
+  <div class="msg" id="msg">変更はまだありません</div>
+  <button class="b primary" id="saveBtn" disabled>保存</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const OWNER = 'tomoct3', REPO = 'tokyo-trip-2027', PATH = 'spots.json', BRANCH = 'main';
+  const API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + PATH;
+  const TYPES = {
+    venue: ['会', 'var(--venue)'], stay: ['宿', 'var(--stay)'], art: ['美', 'var(--art)'],
+    food: ['食', 'var(--food)'], station: ['駅', 'var(--station)'], transport: ['空', 'var(--transport)']
+  };
+  const ORDER = ['venue', 'stay', 'transport', 'station', 'art', 'food'];
+  const DAYS = [12, 13, 14];
+
+  let data = null, original = null, sha = null;
+  const $ = id => document.getElementById(id);
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function getToken() { try { return localStorage.getItem('tripmap-token') || ''; } catch (e) { return ''; } }
+  function setToken(t) { try { t ? localStorage.setItem('tripmap-token', t) : localStorage.removeItem('tripmap-token'); } catch (e) { alert('このブラウザでは鍵を保存できません'); } }
+
+  function showTokenState() {
+    const has = !!getToken();
+    $('tokenState').textContent = has ? '鍵は設定済みです。編集して「保存」を押すと、二人の地図に反映されます。'
+      : 'まだ鍵がありません。鍵がなくても内容は見られますが、保存はできません。';
+    $('tokenInputRow').hidden = has;
+    $('tokenForget').hidden = !has;
+  }
+  $('tokenSave').addEventListener('click', () => {
+    const t = $('tokenInput').value.trim();
+    if (!t) return;
+    setToken(t); $('tokenInput').value = ''; showTokenState(); load();
+  });
+  $('tokenForget').addEventListener('click', () => {
+    if (confirm('このiPhoneから鍵を消しますか？（GitHub側の鍵は消えません）')) { setToken(''); showTokenState(); updateMsg(); }
+  });
+
+  // UTF-8 と base64 の変換
+  const toB64 = s => { const bytes = new TextEncoder().encode(s); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
+  const fromB64 = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, '')), c => c.charCodeAt(0)));
+
+  function headers() {
+    const h = { 'Accept': 'application/vnd.github+json' };
+    const t = getToken(); if (t) h.Authorization = 'Bearer ' + t;
+    return h;
+  }
+
+  function load() {
+    $('list').innerHTML = '<p class="hint">読み込み中…</p>';
+    const fromGitHub = getToken()
+      ? fetch(API + '?ref=' + BRANCH + '&t=' + Date.now(), { headers: headers(), cache: 'no-store' }).then(r => {
+          if (!r.ok) throw new Error('github ' + r.status);
+          return r.json();
+        }).then(j => { sha = j.sha; return JSON.parse(fromB64(j.content)); })
+      : Promise.reject(new Error('no token'));
+    fromGitHub.catch(err => {
+      if (getToken() && /github (401|403|404)/.test(err.message)) {
+        setMsg('鍵が使えないようです（期限切れか、権限の設定違いかもしれません）。鍵を消して入れ直してください。', 'ng');
+      }
+      sha = null;
+      return fetch('spots.json', { cache: 'reload' }).then(r => r.json());
+    }).then(d => {
+      data = d; original = JSON.stringify(d.spots.map(s => [s.id, s.status, s.days || []]));
+      render(); updateMsg();
+    }).catch(() => { $('list').innerHTML = '<p class="hint ng">データを読み込めませんでした。通信状況を確認してください。</p>'; });
+  }
+
+  function render() {
+    const spots = data.spots.slice().sort((a, b) => ORDER.indexOf(a.type) - ORDER.indexOf(b.type));
+    const fixed = spots.filter(s => s.status === 'fixed'), cand = spots.filter(s => s.status !== 'fixed');
+    let h = '';
+    [['確定', fixed], ['候補', cand]].forEach(([label, arr]) => {
+      if (!arr.length) return;
+      h += '<p class="grpTitle">' + label + '（' + arr.length + '件）</p>';
+      arr.forEach(s => {
+        const t = TYPES[s.type] || TYPES.art;
+        const days = s.days || [];
+        h += '<div class="spot" data-id="' + esc(s.id) + '">' +
+          '<span class="dot' + (s.status === 'fixed' ? '' : ' cand') + '" style="--c:' + t[1] + '">' + t[0] + '</span>' +
+          '<div class="name">' + esc(s.name) + '</div>' +
+          '<div class="ctrl">' +
+          '<label><input type="radio" name="st-' + esc(s.id) + '" value="fixed"' + (s.status === 'fixed' ? ' checked' : '') + '>確定</label>' +
+          '<label><input type="radio" name="st-' + esc(s.id) + '" value="candidate"' + (s.status !== 'fixed' ? ' checked' : '') + '>候補</label>' +
+          '<span class="sep"></span>' +
+          DAYS.map(d => '<label><input type="checkbox" value="' + d + '"' + (days.includes(d) ? ' checked' : '') + '>' + d + '日</label>').join('') +
+          '</div></div>';
+      });
+    });
+    $('list').innerHTML = h;
+    markChanged();
+  }
+
+  // 並び替えると押した場所が動いてしまうので、保存するまでは並びを変えない
+  $('list').addEventListener('change', e => {
+    const row = e.target.closest('.spot'); if (!row) return;
+    const s = data.spots.find(x => x.id === row.dataset.id); if (!s) return;
+    if (e.target.type === 'radio') {
+      s.status = e.target.value;
+      row.querySelector('.dot').classList.toggle('cand', s.status !== 'fixed');
+    } else {
+      s.days = [...row.querySelectorAll('input[type=checkbox]:checked')].map(i => Number(i.value)).sort();
+    }
+    markChanged(); updateMsg();
+  });
+
+  function changedIds() {
+    const o = JSON.parse(original); const m = {};
+    o.forEach(([id, st, days]) => m[id] = st + '|' + days.join(','));
+    return data.spots.filter(s => m[s.id] !== s.status + '|' + (s.days || []).join(',')).map(s => s.id);
+  }
+  function markChanged() {
+    const ch = new Set(changedIds());
+    document.querySelectorAll('.spot').forEach(r => r.classList.toggle('changed', ch.has(r.dataset.id)));
+  }
+  function setMsg(t, cls) { $('msg').textContent = t; $('msg').className = 'msg' + (cls ? ' ' + cls : ''); }
+  function updateMsg() {
+    if (!data) return;
+    const n = changedIds().length;
+    $('saveBtn').disabled = !n || !getToken();
+    if (!n) setMsg('変更はまだありません');
+    else if (!getToken()) setMsg(n + '件変更しています。保存するには上で鍵を設定してください。', 'ng');
+    else setMsg(n + '件変更しています。「保存」で二人の地図に反映します。');
+  }
+
+  $('saveBtn').addEventListener('click', () => {
+    const ids = changedIds(); if (!ids.length || !sha) {
+      if (!sha) setMsg('GitHubから最新を読み込めていないため保存できません。ページを開き直してください。', 'ng');
+      return;
+    }
+    $('saveBtn').disabled = true; setMsg('保存中…');
+    const d = new Date(); data.updated = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const names = ids.map(id => data.spots.find(s => s.id === id).name);
+    const body = {
+      message: 'アプリから確定・日程を更新：' + names.join('、').slice(0, 120),
+      content: toB64(JSON.stringify(data, null, 2) + '\n'),
+      sha: sha, branch: BRANCH
+    };
+    fetch(API, { method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()), body: JSON.stringify(body) })
+      .then(r => r.json().then(j => ({ ok: r.ok, status: r.status, j })))
+      .then(({ ok, status, j }) => {
+        if (ok) {
+          sha = j.content.sha;
+          original = JSON.stringify(data.spots.map(s => [s.id, s.status, s.days || []]));
+          render();
+          setMsg('保存しました。1〜2分後に地図の「↻ 更新」を押すと反映されます。', 'ok');
+          $('saveBtn').disabled = true;
+        } else if (status === 409) {
+          setMsg('ほかの場所で先に更新されていました。ページを開き直してから、もう一度変更してください。', 'ng');
+        } else if (status === 401 || status === 403 || status === 404) {
+          setMsg('鍵が使えないようです（期限切れか、書き込みの権限がないかもしれません）。', 'ng'); $('saveBtn').disabled = false;
+        } else {
+          setMsg('保存できませんでした（' + status + '）。少し待ってからもう一度押してください。', 'ng'); $('saveBtn').disabled = false;
+        }
+      })
+      .catch(() => { setMsg('通信できませんでした。電波を確認してもう一度押してください。', 'ng'); $('saveBtn').disabled = false; });
+  });
+
+  window.addEventListener('beforeunload', e => { if (data && changedIds().length) { e.preventDefault(); e.returnValue = ''; } });
+
+  showTokenState();
+  load();
+})();
+</script>
+</body>
+</html>
