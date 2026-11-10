@@ -1,0 +1,92 @@
+[hidden] { display: none !important; }
+:root {
+  --venue: #d1342f;
+  --stay: #2f6fd1;
+  --art: #7a3fc4;
+  --food: #e0841c;
+  --station: #3a8f5c;
+  --transport: #4a5866;
+  --bg: #ffffff;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --line: #d9d9de;
+  --chip: #f2f2f5;
+  --accent: #0a66d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1e;
+    --fg: #f2f2f7;
+    --muted: #a1a1a6;
+    --line: #3a3a3c;
+    --chip: #2c2c2e;
+    --accent: #4a9bff;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; -webkit-text-size-adjust: 100%; }
+button { font: inherit; color: inherit; }
+
+#bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: calc(env(safe-area-inset-top) + 8px) 12px 8px;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+  display: flex; gap: 8px; align-items: center; justify-content: space-between;
+}
+.tabs { display: flex; gap: 4px; background: var(--chip); border-radius: 10px; padding: 3px; }
+.tabs button { border: 0; background: transparent; padding: 6px 8px; border-radius: 8px; font-size: 14px; white-space: nowrap; }
+.tabs button.on { background: var(--bg); box-shadow: 0 1px 3px rgba(0,0,0,.18); font-weight: 600; }
+.toggle { font-size: 13px; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+
+#map { position: fixed; left: 0; right: 0; bottom: 0; top: calc(env(safe-area-inset-top) + 56px); }
+
+#tools {
+  position: fixed; z-index: 1000; right: 12px; bottom: calc(env(safe-area-inset-bottom) + 24px);
+  display: flex; flex-direction: column; gap: 8px;
+}
+#tools button {
+  border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 12px;
+  font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+#tools button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+#pairPanel, #legend {
+  position: fixed; z-index: 1001; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom) + 24px);
+  max-width: 420px; background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
+  padding: 14px; box-shadow: 0 4px 18px rgba(0,0,0,.2);
+}
+#legend { right: auto; width: 220px; font-size: 14px; }
+#pairPanel { right: 120px; }
+#pairPanel p { margin: 0 0 10px; font-size: 15px; }
+.pairActions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.close { border: 0; background: none; color: var(--muted); padding: 4px 0; font-size: 14px; }
+.row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.note { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
+
+/* ピン */
+.dot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--c); color: #fff; font-size: 13px; font-weight: 700;
+  border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+.dot.cand { background: color-mix(in srgb, var(--c) 35%, white); color: var(--c); border: 2px dashed var(--c); box-shadow: none; }
+.pin .dot { width: 30px; height: 30px; font-size: 14px; }
+.pin.sel .dot { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ポップアップ */
+.leaflet-popup-content-wrapper { border-radius: 14px; }
+.leaflet-popup-content { margin: 14px 16px; min-width: 220px; font-size: 14px; line-height: 1.5; }
+.p-name { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+.p-meta { color: #6e6e73; font-size: 12px; margin-bottom: 6px; }
+.p-badge { display: inline-block; padding: 1px 6px; border-radius: 6px; font-size: 11px; margin-right: 4px; background: #eee; color: #333; }
+.p-badge.fixed { background: #1d1d1f; color: #fff; }
+.p-memo { margin: 0 0 8px; }
+.p-actions { display: flex; flex-direction: column; gap: 6px; }
+.btn { display: block; text-align: center; padding: 9px 10px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; }
+.btn.primary { background: #0a66d6; color: #fff !important; }
+.btn.secondary { background: #eef3fb; color: #0a66d6 !important; }
+.sub { font-size: 12px; color: #6e6e73 !important; text-align: center; }
+.p-link { font-size: 13px; }
