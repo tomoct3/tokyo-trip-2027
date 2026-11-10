@@ -142,3 +142,4 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .mini { border: 0; background: none; color: var(--muted); font-size: 14px; padding: 4px 0; }
 .item .tag { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 6px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; }
 .item.picked { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.item.doc { text-decoration: none; color: inherit; }

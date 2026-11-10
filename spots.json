@@ -1,6 +1,18 @@
 {
   "updated": "2026-11-10",
   "home": "stay",
+  "docs": [
+    {
+      "title": "6/13 ライブ当日の移動",
+      "note": "行き帰りの目安時刻と路線図",
+      "url": "https://claude.ai/artifact/UwGJNWmm3ooVRtoctSa5GB"
+    },
+    {
+      "title": "東京の美術館めぐり 2027年6月",
+      "note": "現代美術・建築の候補と回り方の案",
+      "url": "https://claude.ai/artifact/9HVdEzkNzDjUa6hxd1MxJi"
+    }
+  ],
   "spots": [
     {
       "id": "stay",

@@ -15,6 +15,7 @@
   const state = { day: 'all', fixedOnly: false, pair: null }; // pair: null | {from} | {from,to}
   let spots = [];
   let home = null;
+  let docs = [];
   const markers = {};
 
   // 前回の表示設定を覚えておく（使えない環境では無視）
@@ -132,6 +133,14 @@
     groups.push({ label: '確定・日程未定', items: fixed.filter(s => !(s.days || []).length) });
     groups.push({ label: '候補', items: vis.filter(s => s.status !== 'fixed') });
     let h = '';
+    // 資料（作成してもらったページへのリンク）
+    if (docs.length) {
+      h += '<div class="grp">資料</div>';
+      docs.forEach(d => {
+        h += '<a class="item doc" href="' + esc(d.url) + '" target="_blank" rel="noopener"><span class="dot" style="--c:#555">資</span><span><div class="t">' +
+          esc(d.title) + ' ↗</div>' + (d.note ? '<div class="m">' + esc(d.note) + '</div>' : '') + '</span></a>';
+      });
+    }
     groups.forEach(g => {
       if (!g.items.length) return;
       g.items = g.items.slice().sort((a, b) => GROUP_ORDER.indexOf(a.type) - GROUP_ORDER.indexOf(b.type));
@@ -294,6 +303,7 @@
     .then(data => {
       spots = data.spots;
       home = spots.find(s => s.id === data.home) || null;
+      docs = data.docs || [];
       spots.forEach(s => {
         const m = L.marker([s.lat, s.lng], { icon: iconFor(s, false), title: s.name, keyboard: true });
         m.bindPopup(() => popupHtml(s), { maxWidth: 280, autoPanPaddingTopLeft: [10, 80] });
