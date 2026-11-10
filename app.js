@@ -124,7 +124,7 @@
     const box = document.getElementById('spotList');
     const vis = spots.filter(visible);
     const dayText = state.day === 'all' ? '全部' : DAY_LABEL[state.day];
-    document.getElementById('drawerTitle').textContent = 'スポット（' + dayText + (state.fixedOnly ? '・確定だけ' : '') + '）' + vis.length + '件';
+    document.getElementById('drawerTitle').textContent = 'スポット ' + vis.length + '件' + (state.fixedOnly ? '（確定だけ）' : '');
     if (!vis.length) { box.innerHTML = '<p class="empty">表示できるスポットがありません</p>'; return; }
     // 確定は日程別（複数日のスポットは各日に出す）、候補はまとめて
     const fixed = vis.filter(s => s.status === 'fixed');
