@@ -125,6 +125,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .grp { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; font-size: 14px; font-weight: 700;
   position: sticky; top: 0; z-index: 1; background: var(--fg); color: var(--bg); letter-spacing: .02em; }
 .grp .cnt { font-size: 12px; font-weight: 600; opacity: .75; }
+.grp.d12 { background: #2f6fd1; color: #fff; }  /* 土曜は青 */
+.grp.d13 { background: #d1342f; color: #fff; }  /* 日曜は赤 */
+.grp.d14 { background: #3a3a3c; color: #fff; }  /* 月曜は濃いグレー */
 .grp.doc { background: #4a5866; color: #fff; }
 .grp.cand { background: var(--chip); color: var(--fg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .item { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left; border: 0; background: none; padding: 10px 14px; border-bottom: 1px solid var(--line); }

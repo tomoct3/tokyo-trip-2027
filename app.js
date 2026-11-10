@@ -129,7 +129,7 @@
     // 確定は日程別（複数日のスポットは各日に出す）、候補はまとめて
     const fixed = vis.filter(s => s.status === 'fixed');
     const dayKeys = state.day === 'all' ? [12, 13, 14] : [Number(state.day)];
-    const groups = dayKeys.map(d => ({ label: '確定・' + DAY_LABEL[d], items: fixed.filter(s => (s.days || []).includes(d)) }));
+    const groups = dayKeys.map(d => ({ label: '確定・' + DAY_LABEL[d], day: d, items: fixed.filter(s => (s.days || []).includes(d)) }));
     groups.push({ label: '確定・日程未定', items: fixed.filter(s => !(s.days || []).length) });
     groups.push({ label: '候補', items: vis.filter(s => s.status !== 'fixed') });
     let h = '';
@@ -144,7 +144,7 @@
     groups.forEach(g => {
       if (!g.items.length) return;
       g.items = g.items.slice().sort((a, b) => GROUP_ORDER.indexOf(a.type) - GROUP_ORDER.indexOf(b.type));
-      h += '<div class="grp ' + (g.label === '候補' ? 'cand' : 'fixed') + '"><span>' + g.label + '</span><span class="cnt">' + g.items.length + '件</span></div>';
+      h += '<div class="grp ' + (g.label === '候補' ? 'cand' : 'fixed') + (g.day ? ' d' + g.day : '') + '"><span>' + g.label + '</span><span class="cnt">' + g.items.length + '件</span></div>';
       g.items.forEach(s => {
         const t = TYPES[s.type] || TYPES.art;
         const tag = state.pair && state.pair.from && state.pair.from.id === s.id ? '出発'
