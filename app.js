@@ -49,6 +49,13 @@
   }
   const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  // メモ中のURLをリンクにする
+  function linkify(text) {
+    return esc(text).replace(/https?:\/\/[^\s<>"']+/g, u => {
+      const shown = u.length > 40 ? u.slice(0, 38) + '…' : u;
+      return '<a href="' + u + '" target="_blank" rel="noopener">' + shown + '</a>';
+    });
+  }
   function popupHtml(s) {
     const t = TYPES[s.type] || TYPES.art;
     const days = (s.days || []).map(d => DAY_LABEL[d] || d).join('・');
@@ -56,7 +63,7 @@
     h += '<div class="p-meta"><span class="p-badge ' + (s.status === 'fixed' ? 'fixed' : '') + '">' +
       (s.status === 'fixed' ? '確定' : '候補') + '</span>' + esc(t.label) +
       (days ? '　' + esc(s.status === 'fixed' ? days : days + ' に行けそう') : '') + '</div>';
-    if (s.memo) h += '<p class="p-memo">' + esc(s.memo) + '</p>';
+    if (s.memo) h += '<p class="p-memo">' + linkify(s.memo) + '</p>';
     if (home && s.id === home.id) {
       h += '<p class="p-memo" style="font-size:12px;color:#6e6e73">' + (stayAddress()
         ? '行き方は、このiPhoneに保存した正確な住所で開きます。'

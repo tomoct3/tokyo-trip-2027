@@ -85,7 +85,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .p-meta { color: #6e6e73; font-size: 12px; margin-bottom: 6px; }
 .p-badge { display: inline-block; padding: 1px 6px; border-radius: 6px; font-size: 11px; margin-right: 4px; background: #eee; color: #333; }
 .p-badge.fixed { background: #1d1d1f; color: #fff; }
-.p-memo { margin: 0 0 8px; }
+.p-memo { margin: 0 0 8px; white-space: pre-line; overflow-wrap: anywhere; }
 .p-actions { display: flex; flex-direction: column; gap: 6px; }
 .btn { display: block; text-align: center; padding: 9px 10px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; }
 .btn.primary { background: #0a66d6; color: #fff !important; }

@@ -31,6 +31,7 @@
   .ctrl input { width: 19px; height: 19px; margin: 0; }
   .sep { width: 1px; height: 20px; background: var(--line); }
   @media (max-width: 380px) { .page { padding-left: 12px; padding-right: 12px; } .ctrl { font-size: 14px; gap: 6px 8px; } .sep { display: none; } }
+  .memo { grid-column: 2; width: 100%; font: inherit; font-size: 16px; line-height: 1.4; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); resize: none; overflow: hidden; margin-top: 4px; }
   .grpTitle { font-size: 13px; font-weight: 700; color: var(--muted); margin: 18px 0 0; }
   .bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--bg); border-top: 1px solid var(--line);
     padding: 10px 16px calc(env(safe-area-inset-bottom) + 10px); display: flex; gap: 10px; align-items: center; }
@@ -67,7 +68,7 @@
     <p class="hint" id="addrState"></p>
   </div>
 
-  <p class="hint">「確定」にしたスポットは、チェックを入れた日の予定として地図に出ます。「候補」のチェックは「この日に行けそう」という目安です。</p>
+  <p class="hint">「確定」にしたスポットは、チェックを入れた日の予定として地図に出ます。「候補」のチェックは「この日に行けそう」という目安です。メモは二人の地図に表示され、公開ファイルにも入るので、人に見られて困ることは書かないでください。</p>
   <div id="list"><p class="hint">読み込み中…</p></div>
 </div>
 
@@ -136,7 +137,7 @@
       sha = null;
       return fetch('spots.json', { cache: 'reload' }).then(r => r.json());
     }).then(d => {
-      data = d; original = JSON.stringify(d.spots.map(s => [s.id, s.status, s.days || []]));
+      data = d; original = snapshot();
       render(); updateMsg();
     }).catch(() => { $('list').innerHTML = '<p class="hint ng">データを読み込めませんでした。通信状況を確認してください。</p>'; });
   }
@@ -159,10 +160,13 @@
           '<label><input type="radio" name="st-' + esc(s.id) + '" value="candidate"' + (s.status !== 'fixed' ? ' checked' : '') + '>候補</label>' +
           '<span class="sep"></span>' +
           DAYS.map(d => '<label><input type="checkbox" value="' + d + '"' + (days.includes(d) ? ' checked' : '') + '>' + d + '日</label>').join('') +
-          '</div></div>';
+          '</div>' +
+          '<textarea class="memo" rows="2" placeholder="メモ（URLはリンクになります）">' + esc(s.memo || '') + '</textarea>' +
+          '</div>';
       });
     });
     $('list').innerHTML = h;
+    document.querySelectorAll('textarea.memo').forEach(grow);
     markChanged();
   }
 
@@ -170,6 +174,7 @@
   $('list').addEventListener('change', e => {
     const row = e.target.closest('.spot'); if (!row) return;
     const s = data.spots.find(x => x.id === row.dataset.id); if (!s) return;
+    if (e.target.classList.contains('memo')) return;
     if (e.target.type === 'radio') {
       s.status = e.target.value;
       row.querySelector('.dot').classList.toggle('cand', s.status !== 'fixed');
@@ -179,10 +184,19 @@
     markChanged(); updateMsg();
   });
 
+  const snap = s => JSON.stringify([s.status, s.days || [], s.memo || '']);
+  function snapshot() { const m = {}; data.spots.forEach(s => m[s.id] = snap(s)); return m; }
+  function grow(t) { t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+  $('list').addEventListener('input', e => {
+    if (!e.target.classList.contains('memo')) return;
+    const row = e.target.closest('.spot');
+    const s = data.spots.find(x => x.id === row.dataset.id); if (!s) return;
+    s.memo = e.target.value;
+    grow(e.target); markChanged(); updateMsg();
+  });
+
   function changedIds() {
-    const o = JSON.parse(original); const m = {};
-    o.forEach(([id, st, days]) => m[id] = st + '|' + days.join(','));
-    return data.spots.filter(s => m[s.id] !== s.status + '|' + (s.days || []).join(',')).map(s => s.id);
+    return data.spots.filter(s => original[s.id] !== snap(s)).map(s => s.id);
   }
   function markChanged() {
     const ch = new Set(changedIds());
@@ -207,7 +221,7 @@
     const d = new Date(); data.updated = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     const names = ids.map(id => data.spots.find(s => s.id === id).name);
     const body = {
-      message: 'アプリから確定・日程を更新：' + names.join('、').slice(0, 120),
+      message: 'アプリから更新：' + names.join('、').slice(0, 120),
       content: toB64(JSON.stringify(data, null, 2) + '\n'),
       sha: sha, branch: BRANCH
     };
@@ -216,7 +230,7 @@
       .then(({ ok, status, j }) => {
         if (ok) {
           sha = j.content.sha;
-          original = JSON.stringify(data.spots.map(s => [s.id, s.status, s.days || []]));
+          original = snapshot();
           render();
           setMsg('保存しました。1〜2分後に地図の「↻ 更新」を押すと反映されます。', 'ok');
           $('saveBtn').disabled = true;
