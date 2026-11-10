@@ -95,8 +95,73 @@
       if (visible(s)) { if (!map.hasLayer(m)) m.addTo(map); shown.push(m.getLatLng()); }
       else if (map.hasLayer(m)) map.removeLayer(m);
     });
+    renderList();
     if (fit && shown.length) map.fitBounds(L.latLngBounds(shown), { padding: [40, 40], maxZoom: 15 });
   }
+
+  // ---------- リスト ----------
+  const drawer = document.getElementById('drawer');
+  const backdrop = document.getElementById('backdrop');
+  const listBtn = document.getElementById('listBtn');
+  const GROUP_ORDER = ['venue', 'stay', 'transport', 'station', 'art', 'food'];
+
+  function renderList() {
+    const box = document.getElementById('spotList');
+    const vis = spots.filter(visible);
+    const dayText = state.day === 'all' ? '全部' : DAY_LABEL[state.day];
+    document.getElementById('drawerTitle').textContent = 'スポット（' + dayText + (state.fixedOnly ? '・確定だけ' : '') + '）' + vis.length + '件';
+    if (!vis.length) { box.innerHTML = '<p class="empty">表示できるスポットがありません</p>'; return; }
+    const groups = [
+      { label: '確定', items: vis.filter(s => s.status === 'fixed') },
+      { label: '候補', items: vis.filter(s => s.status !== 'fixed') }
+    ];
+    let h = '';
+    groups.forEach(g => {
+      if (!g.items.length) return;
+      g.items.sort((a, b) => GROUP_ORDER.indexOf(a.type) - GROUP_ORDER.indexOf(b.type));
+      h += '<div class="grp">' + g.label + '</div>';
+      g.items.forEach(s => {
+        const t = TYPES[s.type] || TYPES.art;
+        h += '<button class="item" data-id="' + esc(s.id) + '"><span class="dot' + (s.status !== 'fixed' ? ' cand' : '') +
+          '" style="--c:' + t.color + '">' + t.char + '</span><span><div class="t">' + esc(s.name) + '</div>' +
+          (s.memo ? '<div class="m">' + esc(s.memo) + '</div>' : '') + '</span></button>';
+      });
+    });
+    box.innerHTML = h;
+  }
+
+  function openDrawer(open) {
+    drawer.classList.toggle('open', open);
+    drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+    backdrop.hidden = !open;
+    listBtn.classList.toggle('on', open);
+    if (open) {
+      document.getElementById('legend').hidden = true;
+      if (state.pair) { state.pair = null; updatePair(); }
+    }
+  }
+  listBtn.addEventListener('click', () => openDrawer(!drawer.classList.contains('open')));
+  backdrop.addEventListener('click', () => openDrawer(false));
+  document.getElementById('drawerClose').addEventListener('click', () => openDrawer(false));
+
+  document.getElementById('spotList').addEventListener('click', e => {
+    const item = e.target.closest('.item');
+    if (!item) return;
+    const s = spots.find(x => x.id === item.dataset.id);
+    if (!s) return;
+    openDrawer(false);
+    map.closePopup();
+    map.flyTo([s.lat, s.lng], 16, { duration: 0.8 });
+    map.once('moveend', () => markers[s.id].openPopup());
+  });
+
+  // 左へスワイプで閉じる
+  let sx = null;
+  drawer.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+  drawer.addEventListener('touchend', e => {
+    if (sx !== null && sx - e.changedTouches[0].clientX > 60) openDrawer(false);
+    sx = null;
+  }, { passive: true });
 
   // ---------- 2地点モード ----------
   const pairPanel = document.getElementById('pairPanel');

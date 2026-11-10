@@ -16,16 +16,26 @@
 </head>
 <body>
 <header id="bar">
+  <button id="listBtn" class="listBtn" aria-controls="drawer">☰ リスト</button>
   <div class="tabs" role="tablist" aria-label="日付">
     <button data-day="all" class="on">全部</button>
-    <button data-day="12">12日 土</button>
-    <button data-day="13">13日 日</button>
-    <button data-day="14">14日 月</button>
+    <button data-day="12">12日<span class="wd"> 土</span></button>
+    <button data-day="13">13日<span class="wd"> 日</span></button>
+    <button data-day="14">14日<span class="wd"> 月</span></button>
   </div>
   <label class="toggle"><input type="checkbox" id="fixedOnly"> 確定だけ</label>
 </header>
 
 <div id="map"></div>
+
+<div id="backdrop" hidden></div>
+<nav id="drawer" aria-label="スポット一覧" aria-hidden="true">
+  <div class="drawer-head">
+    <span id="drawerTitle">スポット</span>
+    <button id="drawerClose" aria-label="閉じる">×</button>
+  </div>
+  <div id="spotList"></div>
+</nav>
 
 <div id="tools">
   <button id="refresh" title="最新に更新">↻ 更新</button>
