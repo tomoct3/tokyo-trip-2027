@@ -111,14 +111,16 @@
     const dayText = state.day === 'all' ? '全部' : DAY_LABEL[state.day];
     document.getElementById('drawerTitle').textContent = 'スポット（' + dayText + (state.fixedOnly ? '・確定だけ' : '') + '）' + vis.length + '件';
     if (!vis.length) { box.innerHTML = '<p class="empty">表示できるスポットがありません</p>'; return; }
-    const groups = [
-      { label: '確定', items: vis.filter(s => s.status === 'fixed') },
-      { label: '候補', items: vis.filter(s => s.status !== 'fixed') }
-    ];
+    // 確定は日程別（複数日のスポットは各日に出す）、候補はまとめて
+    const fixed = vis.filter(s => s.status === 'fixed');
+    const dayKeys = state.day === 'all' ? [12, 13, 14] : [Number(state.day)];
+    const groups = dayKeys.map(d => ({ label: '確定・' + DAY_LABEL[d], items: fixed.filter(s => (s.days || []).includes(d)) }));
+    groups.push({ label: '確定・日程未定', items: fixed.filter(s => !(s.days || []).length) });
+    groups.push({ label: '候補', items: vis.filter(s => s.status !== 'fixed') });
     let h = '';
     groups.forEach(g => {
       if (!g.items.length) return;
-      g.items.sort((a, b) => GROUP_ORDER.indexOf(a.type) - GROUP_ORDER.indexOf(b.type));
+      g.items = g.items.slice().sort((a, b) => GROUP_ORDER.indexOf(a.type) - GROUP_ORDER.indexOf(b.type));
       h += '<div class="grp">' + g.label + '</div>';
       g.items.forEach(s => {
         const t = TYPES[s.type] || TYPES.art;
