@@ -129,7 +129,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .grp.d13 { background: #d1342f; color: #fff; }  /* 日曜は赤 */
 .grp.d14 { background: #3a3a3c; color: #fff; }  /* 月曜は濃いグレー */
 .grp.doc { background: #4a5866; color: #fff; }
-.grp.cand { background: var(--chip); color: var(--fg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.grp.cand { background: #2e7d4f; color: #fff; }  /* 候補は緑 */
 .item { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left; border: 0; background: none; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 .item:active { background: var(--chip); }
 .item .dot { flex: none; width: 26px; height: 26px; font-size: 13px; }
