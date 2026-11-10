@@ -135,7 +135,7 @@
     let h = '';
     // 資料（作成してもらったページへのリンク）
     if (docs.length) {
-      h += '<div class="grp">資料</div>';
+      h += '<div class="grp doc"><span>資料</span><span class="cnt">' + docs.length + '</span></div>';
       docs.forEach(d => {
         h += '<a class="item doc" href="' + esc(d.url) + '" target="_blank" rel="noopener"><span class="dot" style="--c:#555">資</span><span><div class="t">' +
           esc(d.title) + ' ↗</div>' + (d.note ? '<div class="m">' + esc(d.note) + '</div>' : '') + '</span></a>';
@@ -144,7 +144,7 @@
     groups.forEach(g => {
       if (!g.items.length) return;
       g.items = g.items.slice().sort((a, b) => GROUP_ORDER.indexOf(a.type) - GROUP_ORDER.indexOf(b.type));
-      h += '<div class="grp">' + g.label + '</div>';
+      h += '<div class="grp ' + (g.label === '候補' ? 'cand' : 'fixed') + '"><span>' + g.label + '</span><span class="cnt">' + g.items.length + '件</span></div>';
       g.items.forEach(s => {
         const t = TYPES[s.type] || TYPES.art;
         const tag = state.pair && state.pair.from && state.pair.from.id === s.id ? '出発'
