@@ -70,9 +70,9 @@
     const t = TYPES[s.type] || TYPES.art;
     const cand = s.status !== 'fixed';
     return L.divIcon({
-      className: 'pin' + (selected ? ' sel' : ''),
+      className: 'pin' + (s.type === 'venue' ? ' big' : '') + (selected ? ' sel' : ''),
       html: '<span class="dot' + (cand ? ' cand' : '') + '" style="--c:' + t.color + '">' + t.char + '</span>',
-      iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14]
+      iconSize: s.type === 'venue' ? [40, 40] : [30, 30], iconAnchor: s.type === 'venue' ? [20, 20] : [15, 15], popupAnchor: [0, -14]
     });
   }
 
@@ -91,7 +91,7 @@
     spots.forEach(s => {
       const m = markers[s.id];
       m.setIcon(iconFor(s, isSelected(s)));
-      m.setZIndexOffset(s.status === 'fixed' ? 1000 : 0);
+      m.setZIndexOffset(s.type === 'venue' ? 3000 : s.type === 'stay' ? 2000 : s.status === 'fixed' ? 1000 : 0);
       if (visible(s)) { if (!map.hasLayer(m)) m.addTo(map); shown.push(m.getLatLng()); }
       else if (map.hasLayer(m)) map.removeLayer(m);
     });

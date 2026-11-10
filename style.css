@@ -74,6 +74,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 }
 .dot.cand { background: color-mix(in srgb, var(--c) 35%, white); color: var(--c); border: 2px dashed var(--c); box-shadow: none; }
 .pin .dot { width: 30px; height: 30px; font-size: 14px; }
+.pin.big .dot { width: 40px; height: 40px; font-size: 18px; border-width: 3px; }
 .pin.sel .dot { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* ポップアップ */
