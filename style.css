@@ -130,3 +130,15 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .item .m { font-size: 12px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .empty { padding: 16px 14px; color: var(--muted); font-size: 14px; }
 .editLink { display: block; padding: 14px; text-align: center; border-top: 1px solid var(--line); color: var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
+
+/* リストからの2地点 */
+.headBtns { display: flex; align-items: center; gap: 6px; }
+.pairToggle { border: 1px solid var(--line) !important; border-radius: 10px; padding: 5px 9px !important; font-size: 14px !important; color: var(--fg) !important; font-weight: 600; }
+.pairToggle.on { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
+#listPair { border-top: 1px solid var(--line); padding: 10px 14px; background: var(--bg); }
+#listPair p { margin: 0 0 8px; font-size: 14px; white-space: pre-line; }
+.lpActions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.lpRow { display: flex; justify-content: space-between; align-items: center; }
+.mini { border: 0; background: none; color: var(--muted); font-size: 14px; padding: 4px 0; }
+.item .tag { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 6px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; }
+.item.picked { background: color-mix(in srgb, var(--accent) 10%, transparent); }

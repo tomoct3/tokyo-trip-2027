@@ -32,9 +32,23 @@
 <nav id="drawer" aria-label="スポット一覧" aria-hidden="true">
   <div class="drawer-head">
     <span id="drawerTitle">スポット</span>
-    <button id="drawerClose" aria-label="閉じる">×</button>
+    <span class="headBtns">
+      <button id="listPairBtn" class="pairToggle">⇄ 2地点</button>
+      <button id="drawerClose" aria-label="閉じる">×</button>
+    </span>
   </div>
   <div id="spotList"></div>
+  <div id="listPair" hidden>
+    <p id="listPairMsg"></p>
+    <div class="lpActions" id="listPairActions" hidden>
+      <a id="listPairApple" class="btn primary" target="_blank" rel="noopener">Appleマップで行き方</a>
+      <div class="lpRow">
+        <button id="listPairSwap" class="mini">⇅ 入れ替え</button>
+        <a id="listPairGoogle" class="sub" target="_blank" rel="noopener">Googleマップ</a>
+      </div>
+    </div>
+    <button id="listPairClear" class="mini">やめる</button>
+  </div>
   <a class="editLink" href="edit.html">✎ 確定と日程を編集する</a>
 </nav>
 

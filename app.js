@@ -131,8 +131,10 @@
       h += '<div class="grp">' + g.label + '</div>';
       g.items.forEach(s => {
         const t = TYPES[s.type] || TYPES.art;
-        h += '<button class="item" data-id="' + esc(s.id) + '"><span class="dot' + (s.status !== 'fixed' ? ' cand' : '') +
-          '" style="--c:' + t.color + '">' + t.char + '</span><span><div class="t">' + esc(s.name) + '</div>' +
+        const tag = state.pair && state.pair.from && state.pair.from.id === s.id ? '出発'
+          : state.pair && state.pair.to && state.pair.to.id === s.id ? '到着' : '';
+        h += '<button class="item' + (tag ? ' picked' : '') + '" data-id="' + esc(s.id) + '"><span class="dot' + (s.status !== 'fixed' ? ' cand' : '') +
+          '" style="--c:' + t.color + '">' + t.char + '</span><span><div class="t">' + esc(s.name) + (tag ? '<span class="tag">' + tag + '</span>' : '') + '</div>' +
           (s.memo ? '<div class="m">' + esc(s.memo) + '</div>' : '') + '</span></button>';
       });
     });
@@ -146,7 +148,6 @@
     listBtn.classList.toggle('on', open);
     if (open) {
       document.getElementById('legend').hidden = true;
-      if (state.pair) { state.pair = null; updatePair(); }
     }
   }
   listBtn.addEventListener('click', () => openDrawer(!drawer.classList.contains('open')));
@@ -158,6 +159,7 @@
     if (!item) return;
     const s = spots.find(x => x.id === item.dataset.id);
     if (!s) return;
+    if (state.pair) { pickPair(s); return; }
     openDrawer(false);
     map.closePopup();
     map.flyTo([s.lat, s.lng], 16, { duration: 0.8 });
@@ -182,7 +184,8 @@
     const p = state.pair;
     pairPanel.hidden = !p;
     pairBtn.classList.toggle('on', !!p);
-    if (!p) return;
+    updateListPair();
+    if (!p) { render(false); return; }
     if (!p.from) { pairMsg.textContent = '出発地のピンを押してください'; pairActions.hidden = true; }
     else if (!p.to) { pairMsg.textContent = '出発：' + p.from.name + '\n目的地のピンを押してください'; pairActions.hidden = true; }
     else {
@@ -194,6 +197,34 @@
     pairMsg.style.whiteSpace = 'pre-line';
     render(false);
   }
+  // リスト側の2地点表示
+  function updateListPair() {
+    const p = state.pair;
+    document.getElementById('listPairBtn').classList.toggle('on', !!p);
+    document.getElementById('listPair').hidden = !p;
+    document.querySelector('.editLink').hidden = !!p;
+    if (!p) return;
+    const msg = document.getElementById('listPairMsg');
+    const acts = document.getElementById('listPairActions');
+    if (!p.from) { msg.textContent = '出発地を選んでください'; acts.hidden = true; }
+    else if (!p.to) { msg.textContent = '出発：' + p.from.name + '\n到着地を選んでください'; acts.hidden = true; }
+    else {
+      msg.textContent = p.from.name + ' → ' + p.to.name;
+      document.getElementById('listPairApple').href = appleUrl(p.from, p.to);
+      document.getElementById('listPairGoogle').href = googleUrl(p.from, p.to);
+      acts.hidden = false;
+    }
+  }
+  document.getElementById('listPairBtn').addEventListener('click', () => {
+    state.pair = state.pair ? null : {};
+    map.closePopup();
+    updatePair();
+  });
+  document.getElementById('listPairClear').addEventListener('click', () => { state.pair = null; updatePair(); });
+  document.getElementById('listPairSwap').addEventListener('click', () => {
+    if (state.pair && state.pair.from && state.pair.to) { state.pair = { from: state.pair.to, to: state.pair.from }; updatePair(); }
+  });
+
   pairBtn.addEventListener('click', () => {
     state.pair = state.pair ? null : {};
     map.closePopup();
@@ -202,13 +233,13 @@
   });
   document.getElementById('pairClose').addEventListener('click', () => { state.pair = null; updatePair(); });
 
+  function pickPair(s) {
+    if (!state.pair.from || state.pair.to) state.pair = { from: s };
+    else if (state.pair.from.id !== s.id) state.pair.to = s;
+    updatePair();
+  }
   function onMarker(s, m) {
-    if (state.pair) {
-      if (!state.pair.from || state.pair.to) state.pair = { from: s };
-      else if (state.pair.from.id !== s.id) state.pair.to = s;
-      updatePair();
-      return;
-    }
+    if (state.pair) { pickPair(s); return; }
     m.openPopup();
   }
 
