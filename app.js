@@ -137,7 +137,7 @@
     if (docs.length) {
       h += '<div class="grp doc"><span>資料</span><span class="cnt">' + docs.length + '</span></div>';
       docs.forEach(d => {
-        h += '<a class="item doc" href="' + esc(d.url) + '" target="_blank" rel="noopener"><span class="dot" style="--c:#555">資</span><span><div class="t">' +
+        h += '<a class="item doc" href="' + esc(d.url) + '" target="_blank" rel="noopener"><span class="docIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg></span><span><div class="t">' +
           esc(d.title) + ' ↗</div>' + (d.note ? '<div class="m">' + esc(d.note) + '</div>' : '') + '</span></a>';
       });
     }

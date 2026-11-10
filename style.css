@@ -160,3 +160,4 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
 .tabs.dtabs button.on.d12 { background: #2f6fd1; }
 .tabs.dtabs button.on.d13 { background: #d1342f; }
 .tabs.dtabs button.on.d14 { background: #3a3a3c; }
+.docIcon { flex: none; width: 26px; display: flex; justify-content: center; color: var(--muted); padding-top: 1px; }
