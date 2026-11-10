@@ -34,7 +34,9 @@
   }).addTo(map);
 
   // ---------- 行き方リンク ----------
-  const ll = s => s.lat + ',' + s.lng;
+  // 宿の正確な住所は公開ファイルに書かず、このiPhoneの中だけに保存している（編集ページで設定）
+  function stayAddress() { try { return localStorage.getItem('tripmap-stay-address') || ''; } catch (e) { return ''; } }
+  const ll = s => (home && s.id === home.id && stayAddress()) ? encodeURIComponent(stayAddress()) : s.lat + ',' + s.lng;
   function appleUrl(from, to) {
     let u = 'https://maps.apple.com/?daddr=' + ll(to) + '&dirflg=r';
     if (from) u += '&saddr=' + ll(from);
@@ -55,6 +57,11 @@
       (s.status === 'fixed' ? '確定' : '候補') + '</span>' + esc(t.label) +
       (days ? '　' + esc(s.status === 'fixed' ? days : days + ' に行けそう') : '') + '</div>';
     if (s.memo) h += '<p class="p-memo">' + esc(s.memo) + '</p>';
+    if (home && s.id === home.id) {
+      h += '<p class="p-memo" style="font-size:12px;color:#6e6e73">' + (stayAddress()
+        ? '行き方は、このiPhoneに保存した正確な住所で開きます。'
+        : '正確な住所は「リスト」→「確定と日程を編集する」で、このiPhoneだけに保存できます。') + '</p>';
+    }
     h += '<div class="p-actions">';
     h += '<a class="btn primary" target="_blank" rel="noopener" href="' + appleUrl(null, s) + '">現在地から（Appleマップ）</a>';
     if (home && home.id !== s.id) {

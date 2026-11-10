@@ -57,6 +57,16 @@
     <button class="b" id="tokenForget" hidden>このiPhoneから鍵を消す</button>
   </div>
 
+  <div class="card">
+    <h2>宿の正確な住所</h2>
+    <p class="hint">ここに入れた住所は、このiPhoneの中だけに保存されます（GitHubにも同行者にも送られません）。「宿へ」「宿から」の行き方を開くときに使います。地図のピンの位置はおおよそのままです。同行者の方は、ご自分のiPhoneで同じように入れてください。</p>
+    <div class="tokenRow">
+      <input id="addrInput" type="text" autocomplete="off" placeholder="例：東京都台東区…">
+      <button class="b" id="addrSave">保存</button>
+    </div>
+    <p class="hint" id="addrState"></p>
+  </div>
+
   <p class="hint">「確定」にしたスポットは、チェックを入れた日の予定として地図に出ます。「候補」のチェックは「この日に行けそう」という目安です。</p>
   <div id="list"><p class="hint">読み込み中…</p></div>
 </div>
@@ -222,6 +232,21 @@
   });
 
   window.addEventListener('beforeunload', e => { if (data && changedIds().length) { e.preventDefault(); e.returnValue = ''; } });
+
+  // 宿の住所（この端末だけ）
+  function getAddr() { try { return localStorage.getItem('tripmap-stay-address') || ''; } catch (e) { return ''; } }
+  function showAddr() {
+    const a = getAddr(); $('addrInput').value = a;
+    $('addrState').textContent = a ? '保存済みです。消すときは欄を空にして「保存」を押してください。' : 'まだ入っていません。';
+  }
+  $('addrSave').addEventListener('click', () => {
+    const a = $('addrInput').value.trim();
+    try { a ? localStorage.setItem('tripmap-stay-address', a) : localStorage.removeItem('tripmap-stay-address'); }
+    catch (e) { alert('このブラウザでは保存できません'); return; }
+    showAddr();
+    $('addrState').textContent = a ? '保存しました。地図に戻ると、行き方がこの住所で開きます。' : '住所を消しました。';
+  });
+  showAddr();
 
   showTokenState();
   load();
