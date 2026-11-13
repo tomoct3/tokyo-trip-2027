@@ -331,6 +331,18 @@
       "lng": 139.7405,
       "memo": "生誕150年 木島櫻谷（6/5〜8/1）。六本木一丁目。月曜休館。",
       "url": "https://sen-oku.or.jp/tokyo/"
+    },
+    {
+      "id": "neroli",
+      "name": "ネロリハーブ",
+      "type": "shop",
+      "status": "candidate",
+      "days": [],
+      "lat": 35.6665,
+      "lng": 139.7135,
+      "address": "東京都港区北青山3-9-2",
+      "memo": "「英国式植物療法(西洋漢方)」「漢方」「和漢」「アーユルヴェーダ」を取り入れたオリジナルブレンドハーブティー専門店。https://www.neroliherb.com/",
+      "url": "https://www.neroliherb.com/"
     }
   ]
 }

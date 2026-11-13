@@ -84,9 +84,9 @@
   const API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + PATH;
   const TYPES = {
     venue: ['会', 'var(--venue)'], stay: ['宿', 'var(--stay)'], art: ['美', 'var(--art)'],
-    food: ['食', 'var(--food)'], station: ['駅', 'var(--station)'], transport: ['空', 'var(--transport)']
+    food: ['食', 'var(--food)'], shop: ['店', 'var(--shop)'], station: ['駅', 'var(--station)'], transport: ['空', 'var(--transport)']
   };
-  const ORDER = ['venue', 'stay', 'transport', 'station', 'art', 'food'];
+  const ORDER = ['venue', 'stay', 'transport', 'station', 'art', 'food', 'shop'];
   const DAYS = [12, 13, 14];
 
   let data = null, original = null, sha = null;

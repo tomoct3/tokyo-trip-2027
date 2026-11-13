@@ -7,6 +7,7 @@
     stay:      { label: '宿',            char: '宿', color: 'var(--stay)' },
     art:       { label: '美術館・建築',  char: '美', color: 'var(--art)' },
     food:      { label: '食事',          char: '食', color: 'var(--food)' },
+    shop:      { label: 'お店',          char: '店', color: 'var(--shop)' },
     station:   { label: '駅',            char: '駅', color: 'var(--station)' },
     transport: { label: '空港',          char: '空', color: 'var(--transport)' }
   };
@@ -37,7 +38,9 @@
   // ---------- 行き方リンク ----------
   // 宿の正確な住所は公開ファイルに書かず、このiPhoneの中だけに保存している（編集ページで設定）
   function stayAddress() { try { return localStorage.getItem('tripmap-stay-address') || ''; } catch (e) { return ''; } }
-  const ll = s => (home && s.id === home.id && stayAddress()) ? encodeURIComponent(stayAddress()) : s.lat + ',' + s.lng;
+  // 住所が分かっているスポットは、行き方を住所で開く（ピンの位置より正確）
+  const ll = s => (home && s.id === home.id && stayAddress()) ? encodeURIComponent(stayAddress())
+    : s.address ? encodeURIComponent(s.address) : s.lat + ',' + s.lng;
   function appleUrl(from, to) {
     let u = 'https://maps.apple.com/?daddr=' + ll(to) + '&dirflg=r';
     if (from) u += '&saddr=' + ll(from);
@@ -118,7 +121,7 @@
   const drawer = document.getElementById('drawer');
   const backdrop = document.getElementById('backdrop');
   const listBtn = document.getElementById('listBtn');
-  const GROUP_ORDER = ['venue', 'stay', 'transport', 'station', 'art', 'food'];
+  const GROUP_ORDER = ['venue', 'stay', 'transport', 'station', 'art', 'food', 'shop'];
 
   function renderList() {
     const box = document.getElementById('spotList');
