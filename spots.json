@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-11",
+  "updated": "2026-11-13",
   "home": "stay",
   "docs": [
     {
@@ -101,7 +101,7 @@
       "id": "keyaki",
       "name": "けやきひろば",
       "type": "food",
-      "status": "candidate",
+      "status": "fixed",
       "days": [
         13
       ],
